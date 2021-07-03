@@ -114,7 +114,7 @@
             initialX = currentX;
             initialY = currentY;
 
-            //sendPosition()
+            sendPosition()
 
             active = false;
         }
@@ -155,8 +155,8 @@
 
         function sendPosition(){
             let position = {
-                'x' : "69",
-                'y' : "68",
+                'x' : '69',
+                'y' : '68',
             }
             const request = new XMLHttpRequest()
             request.open('POST', '/xposypos/${JSON.stringify(position)}')
