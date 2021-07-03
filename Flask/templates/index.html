@@ -2,120 +2,173 @@
 <html>
 
 <head>
-  <meta name="viewport"
+    <meta name="viewport"
         content="width=device-width,
         initial-scale=1.0,
         user-scalable=no" />
-  <title>Drag/Drop/Bounce</title>
-  <style>
-    #container {
-      width: 100%;
-      height: 400px;
-      background-color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: 7px;
-      touch-action: none;
-    }
-    #item {
-      width: 100px;
-      height: 100px;
-      background-color: rgb(0,0,255);  
-      border: 10px solid rgba(100, 100, 200, .5);
-      border-radius: 50%;
-      touch-action: none;
-      user-select: none;
-    }
-    #item:active {
-      background-color: rgba(168, 218, 220, 1.00);
-    }
-    #item:hover {
-      cursor: pointer;
-      border-width: 12px;
-    }
-  </style>
+    <title>dragging test</title>
+    <style>
+        #container {
+            /* 
+            width: 100%;
+            height: 400px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 7px;
+            touch-action: none;
+            */
+            
+            
+            position: absolute;
+            background-color: #333;
+            align-items: center;
+            justify-content: center;
+            width: 1280px;
+            height: 640px;
+            border-radius: 640px 640px 4px 4px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            touch-action: none;
+            
+        }
+        #item {
+            width: 30px;
+            height: 30px;
+            background-color: rgb(0,0,255);  
+            border: 5px solid rgba(100, 100, 200, .5);
+            border-radius: 50%;
+            touch-action: none;
+            user-select: none;
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -15px 0 0 -15px;
+        }
+        #item:active {
+            background-color: rgba(168, 218, 220, 1.00);
+        }
+        #item:hover {
+            cursor: pointer;
+            border-width: 5px;
+        }
+    </style>
 </head>
 
 <body>
 
-  <div id="outerContainer">
-    <div id="container">
-      <div id="item">
+    <div id="outerContainer">
+        <div id="container">
+            <div id="item">
 
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
+    
+    <p>x: <span id="xpos"></span></p>
+    <p>y: <span id="ypos"></span></p>
+    
 
-  <script>
-    var dragItem = document.querySelector("#item");
-    var container = document.querySelector("#container");
+    <script>
+        var dragItem = document.querySelector("#item");
+        var container = document.querySelector("#container");
 
-    var active = false;
-    var currentX;
-    var currentY;
-    var initialX;
-    var initialY;
-    var xOffset = 0;
-    var yOffset = 0;
+        var active = false;
+        var currentX;
+        var currentY;
+        var initialX;
+        var initialY;
+        var xOffset = 0;
+        var yOffset = 0;
 
-    container.addEventListener("touchstart", dragStart, false);
-    container.addEventListener("touchend", dragEnd, false);
-    container.addEventListener("touchmove", drag, false);
+        var yLimit = 0;
+        var xLimit = 0;
 
-    container.addEventListener("mousedown", dragStart, false);
-    container.addEventListener("mouseup", dragEnd, false);
-    container.addEventListener("mousemove", drag, false);
+        container.addEventListener("touchstart", dragStart, false);
+        container.addEventListener("touchend", dragEnd, false);
+        container.addEventListener("touchmove", drag, false);
 
-    function dragStart(e) {
-      if (e.type === "touchstart") {
-        initialX = e.touches[0].clientX - xOffset;
-        initialY = e.touches[0].clientY - yOffset;
-      } else {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-      }
+        container.addEventListener("mousedown", dragStart, false);
+        container.addEventListener("mouseup", dragEnd, false);
+        container.addEventListener("mousemove", drag, false);
 
-      if (e.target === dragItem) {
-        active = true;
-      }
-    }
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
 
-    function dragEnd(e) {
-      initialX = currentX;
-      initialY = currentY;
-
-      active = false;
-    }
-
-    function drag(e) {
-      if (active) {
-
-        e.preventDefault();
-
-        if (e.type === "touchmove") {
-          currentX = e.touches[0].clientX - initialX;
-          currentY = e.touches[0].clientY - initialY;
-        } else {
-          currentX = e.clientX - initialX;
-          currentY = e.clientY - initialY;
+            if (e.target === dragItem) {
+                active = true;
+            }
         }
 
-        xOffset = currentX;
-        yOffset = currentY;
-          
-        //document.getElementById("xpos").innerHTML = currentX
-        //document.getElementById("ypos").innerHTML = currentY
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
 
-        setTranslate(currentX, currentY, dragItem);
-      }
-    }
+            //sendPosition()
 
-    function setTranslate(xPos, yPos, el) {
-      el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
-    }
-  </script>
+            active = false;
+        }
+
+        function drag(e) {
+            if (active) {
+                e.preventDefault();
+
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+
+                /*
+                if (currentX >= 640){
+                    currentX = 640
+                } else if (current <= -640){
+                    currentX = -640
+                }
+                */
+
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                document.getElementById("xpos").innerHTML = currentX
+                document.getElementById("ypos").innerHTML = currentY * -1
+
+                setTranslate(currentX, currentY, dragItem);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+        }
+
+        function sendPosition(){
+            let position = {
+                'x' : "69",
+                'y' : "68",
+            }
+            const request = new XMLHttpRequest()
+            request.open('POST', '/xposypos/${JSON.stringify(position)}')
+            request.onload = () => {
+                const flaskMessage = request.responseText
+                console.log(flaskMessage)
+            }
+            request.send()
+        }
+
+
+    </script>
 </body>
 
 </html>
