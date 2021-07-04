@@ -1,24 +1,22 @@
-from flask import Flask, render_template, request, redirect, session
-import json
+from flask import Flask, render_template, request, jsonify
+from flask_jsglue import JSGlue
+
 app = Flask(__name__)
+jsglue = JSGlue(app)
 
 @app.route('/')
-def home():
+def index():
     return render_template("index.html")
 
-@app.route('/xposypos/<string:pos>', methods=['POST'])
-def processPos(pos):
-    pos = json.loads(pos)
-    print()
-    print("x position: " + str(pos['x']))
-    print("y position: " + str(pos['y']))
-    print()
+@app.route('/position', methods=['POST', 'GET'])
+def getPosition():
+    if request.method == 'POST':
+        position = request.get_json()
+        print(position)
 
-    with open('pos.txt', 'a') as f:
-        f.write("position: " + str(pos['x']) + ", " + str(pos['y']))
-        f.close()
-
-    return "done"
+        return jsonify(status="success", position=position)
+    else:
+        return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80, debug=True)

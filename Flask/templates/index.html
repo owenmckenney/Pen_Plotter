@@ -72,6 +72,9 @@
     <p>x: <span id="xpos"></span></p>
     <p>y: <span id="ypos"></span></p>
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js')}}">\x3C/script>')</script>
+    {{ JSGlue.include() }}
 
     <script>
         var dragItem = document.querySelector("#item");
@@ -114,8 +117,6 @@
             initialX = currentX;
             initialY = currentY;
 
-            sendPosition()
-
             active = false;
         }
 
@@ -131,17 +132,28 @@
                     currentY = e.clientY - initialY;
                 }
 
-                /*
-                if (currentX >= 640){
-                    currentX = 640
-                } else if (current <= -640){
-                    currentX = -640
-                }
-                */
-
                 xOffset = currentX;
                 yOffset = currentY;
                 
+                var position = {
+                    'x': currentX,
+                    'y': currentY * -1
+                }
+
+                $.ajax({
+                url: Flask.url_for('getPosition'),
+                type: 'POST',
+                data: JSON.stringify(position),
+                dataType: "json",
+                contentType: "application/json",
+                success: function(response){
+                    console.log(response);
+                },
+                error: function(err){
+                    console.log(err);
+                }
+                });
+
                 document.getElementById("xpos").innerHTML = currentX
                 document.getElementById("ypos").innerHTML = currentY * -1
 
@@ -153,21 +165,7 @@
             el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
         }
 
-        function sendPosition(){
-            let position = {
-                'x' : '69',
-                'y' : '68',
-            }
-            const request = new XMLHttpRequest()
-            request.open('POST', '/xposypos/${JSON.stringify(position)}')
-            request.onload = () => {
-                const flaskMessage = request.responseText
-                console.log(flaskMessage)
-            }
-            request.send()
-        }
-
-
+        
     </script>
 </body>
 
