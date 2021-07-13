@@ -137,21 +137,22 @@ class Equal_Step:
 
         return 'done'
             
-            
-# dir, step, sleep, spr, (mode pins), mode 
-#stepper1 = Stepper(20, 21, 16, 3200, (1,7,8), "Full")
-#stepper1 = Stepper(2, 3, 23, 1600, (1,7,8), "Full")
-#stepper2 = Stepper(16, 20, 24, 1600, (1,7,8), "Full")
-#stepper1.Rotate(1, 1)
-#stepper1.equal_step(473, 39)
 
-#equal = Equal_Step(stepper1, stepper2)
-#equal.equal_step(473, 0, 39, 1)
+if __name__ == "__main__":
+    # dir, step, sleep, spr, (mode pins), mode 
+    stepper1 = Stepper(20, 21, 16, 3200, (1,7,8), "Full")
+    #stepper1 = Stepper(2, 3, 23, 1600, (1,7,8), "Full")
+    #stepper2  Stepper(16, 20, 24, 1600, (1,7,8), "Full")
+    #stepper1.Rotate(1, 1)
+    #stepper1.equal_step(473, 39)
 
-#es(stepper1, 200, stepper2, 10)
+    equal = Equal_Step(stepper1, stepper2)
+    equal.equal_step(473, 0, 39, 1)
 
-#stepper2.Rotate(1, 1)
-#stepper1.Rotate_Ramp_Up_Down(1, 1)
-#stepper1.Oscilate(4)
+    #es(stepper1, 200, stepper2, 10)
+
+    #stepper2.Rotate(1, 1)
+    #stepper1.Rotate_Ramp_Up_Down(1, 1)
+    #stepper1.Oscilate(4)
 
 
