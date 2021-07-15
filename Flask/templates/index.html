@@ -60,6 +60,10 @@
     
     <p>x: <span id="xpos"></span></p>
     <p>y: <span id="ypos"></span></p>
+
+    <form method="post" action="{{ url_for('checkButtons') }}">
+        <input type="submit" value="home" name="homebtn"/>
+    </form>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js')}}">\x3C/script>')</script>
