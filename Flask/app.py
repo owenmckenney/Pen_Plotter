@@ -23,10 +23,15 @@ class Plotter:
         GPIO.setup(self.limit1_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(self.limit2_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         
-        self.left_angle = -30
-        self.right_angle = 210
+        #self.left_angle = -30
+        #self.right_angle = 210
+
+        self.left_angle = 30
+        self.right_angle = 150
 
         self.delay = 1 / 2000
+
+        self.path = []
 
         self.es = Equal_Step(self.stepper1, self.stepper2)
     
@@ -61,9 +66,12 @@ class Plotter:
 
         return "home"
 
+    def collect_pos(self, pos):
+        self.path.append(pos)
+
     def update_pos(self, x_pos, y_pos):
-        x_pos /= 2
-        y_pos /= 2
+        x_pos = int(x_pos)
+        y_pos = int(y_pos)
         r = math.sqrt(x_pos ** 2 + y_pos ** 2)
 
         if x_pos == 0:
@@ -81,23 +89,36 @@ class Plotter:
             inner_angle_raw = .99
 
         inner_angle = math.degrees(math.acos(inner_angle_raw))
-
-        la = theta - inner_angle
-        ra = theta + inner_angle
-        la_dif = la - self.left_angle
-        ra_dif = ra - self.right_angle
-
-        start_angle = 60
-        start_distance = self.arm_length
-
-        self.es.equal_step(la_dif, ra_dif)        
-            
         
-        #return r, theta, math.degrees(inner_angle)
+        current_la = theta - inner_angle
+        current_ra = theta + inner_angle
+
+        la_dif = current_la - self.left_angle
+        ra_dif = current_ra - self.right_angle
+
+        la_steps = round(la_dif / 0.45) * -1
+        ra_steps = round(ra_dif / 0.45) * -1
+
+        self.es.equal_step(la_steps, ra_steps)        
+        
+        self.left_angle = round(current_la, 5)
+        self.right_angle = round(current_ra, 5)
+        
+        '''
+        print('\nposition: ', x_pos, y_pos)
+        print('theta: ', theta, ' left_angle: ', self.left_angle, ' right_angle: ', self.right_angle)
+        print('stepped ', la_steps, ' on left, ', ra_steps, ' on right')
+        '''
+
+    def draw(self):
+        for x in range(0, len(self.path)):
+            #self.update_pos(self.path[x][0], self.path[x][1])
+            print(self.path[x])
 
 s1 = Stepper(2, 3, 23, 1600, (1,7,8), "Full")
 s2 = Stepper(16, 20, 24, 1600, (1,7,8), "Full")
 p = Plotter(s1, s2, 5, 6, 160)
+p.update_pos(0, 160)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():    
@@ -111,8 +132,12 @@ def checkButtons():
             #p.home()            
             print("Successfully Homed.")
             return redirect(url_for('checkButtons'))
-        else:
-            pass
+
+        if request.form.get('runbtn') == 'run':
+            print("starting draw")
+            p.draw()
+            print("drawing done")
+            return redirect(url_for('checkButtons'))
 
     elif request.method == 'GET':
         return render_template('index.html')
@@ -121,16 +146,9 @@ def checkButtons():
 def getPosition():
     if request.method == 'POST':
         position = request.get_json()
-        #print(position)
-        print()
-        print(p.update_pos(position['x'], position['y']))
-        print()
+        #p.update_pos(position['x'], position['y'])
+        p.collect_pos(position)
         return position
-        #return jsonify(status="success", position=position)
-    #else:
-        #return render_template("index.html")
-
-#def return_position():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80, debug=True)
