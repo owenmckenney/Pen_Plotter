@@ -142,6 +142,7 @@ def checkButtons():
     elif request.method == 'GET':
         return render_template('index.html')
 
+
 @app.route('/position', methods=['POST', 'GET'])
 def getPosition():
     if request.method == 'POST':
@@ -149,6 +150,7 @@ def getPosition():
         #p.update_pos(position['x'], position['y'])
         p.collect_pos(position)
         return position
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80, debug=True)

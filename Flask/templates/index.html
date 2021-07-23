@@ -9,7 +9,7 @@
     <title>dragging test</title>
     <style>
         #container {  
-            /*position: absolute;*/
+            position: absolute;
             background-color: #ECECEC;
             align-items: center;
             justify-content: center;
@@ -37,25 +37,6 @@
             
         }
 
-        canvas {
-            /*
-            position: absolute;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid white;
-            background-color: #ECECEC;
-            width: 1280px;
-            height: 640px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            touch-action: none;
-            */
-            width: 50px;
-            height: 50px;
-            background-color: #ECECEC;
-        }
-
         #item:active {
             background-color: rgba(168, 218, 220, 1.00);
         }
@@ -67,10 +48,6 @@
 
         body {
             background: #333;
-        }
-
-        #container canvas, #item {
-            position: absolute;
         }
 
     </style>
@@ -89,8 +66,7 @@
     -->
     
     <div id="outerContainer">
-        <div id="Container">
-            <canvas></canvas>
+        <div id="container">
             <div id="item"></div>
         </div>
     </div>
@@ -124,11 +100,6 @@
 
         var initial = Date.now()
         var current = 0;
-
-        var c = document.getElementById("canvas");
-        var ctx = c.getContext("2d");
-        ctx.canvas.width = window.innerWidth;
-        ctx.canvas.height = window.innerHeight;
 
         container.addEventListener("touchstart", dragStart, false);
         container.addEventListener("touchend", dragEnd, false);
@@ -164,7 +135,6 @@
         function drag(e) {
             if (active) {
                 current = Date.now();
-                ctx.beginPath()
                 e.preventDefault();
 
                 if (e.type === "touchmove") {
@@ -178,9 +148,6 @@
                 xOffset = currentX;
                 yOffset = currentY; 
 
-                ctx.arc(currentX, currentY, 10, 0, 2 * Math.PI);
-                ctx.stroke();
-                
                 if ((current - initial) > 10){
                     sendPosition(currentX, currentY);
                     initial = Date.now();
