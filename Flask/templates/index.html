@@ -50,20 +50,18 @@
             background: #333;
         }
 
+        .paint {
+            width: 15px;
+            height: 15px;
+            background-color: rgb(255,0,0);
+            border-radius: 50%;
+            position: absolute;
+        }
+
     </style>
 </head>
 
 <body>
-    
-    <!--
-    <div id="outerContainer">
-        <div id="container">
-
-            <div id="item">
-            </div>
-        </div>
-    </div>
-    -->
     
     <div id="outerContainer">
         <div id="container">
@@ -101,6 +99,11 @@
         var initial = Date.now()
         var current = 0;
 
+        const divArray = [];
+        var divNum = 0;
+
+        let spacebarPressed = false;
+
         container.addEventListener("touchstart", dragStart, false);
         container.addEventListener("touchend", dragEnd, false);
         container.addEventListener("touchmove", drag, false);
@@ -108,6 +111,17 @@
         container.addEventListener("mousedown", dragStart, false);
         container.addEventListener("mouseup", dragEnd, false);
         container.addEventListener("mousemove", drag, false);
+
+        document.addEventListener("keydown", event => {
+            if(event.code === 'Space'){
+                spacebarPressed = true;
+            }
+        });
+        document.addEventListener("keyup", event => {
+            if(event.code === 'Space'){
+                spacebarPressed = false;
+            }
+        });
 
         function dragStart(e) {
             if (e.type === "touchstart") {
@@ -146,10 +160,19 @@
                 }
 
                 xOffset = currentX;
-                yOffset = currentY; 
+                yOffset = currentY;
+                
+                if(spacebarPressed){
+                    createDiv(currentX, currentY);
+                    setDivPos(currentX, currentY);
+                    nextDiv();
+                }
 
-                if ((current - initial) > 10){
-                    sendPosition(currentX, currentY);
+                
+                if((current - initial) > 10){
+                    if(spacebarPressed){
+                        sendPosition(currentX, currentY);
+                    }
                     initial = Date.now();
                 }
                 
@@ -160,6 +183,26 @@
             }
         }
 
+        document.body.onload = createDiv;
+        let containerDiv = document.getElementById("item");
+        let parentDiv = containerDiv.parentNode;
+
+        function createDiv(cX, cY){
+            divArray[divNum] = document.createElement("div" + divNum);
+            divArray[divNum].className = 'paint';
+            parentDiv.insertBefore(divArray[divNum], containerDiv);
+        }
+
+        function setDivPos(cX, cY){
+            const d = document.getElementsByTagName("div" + divNum)[0];
+            d.style.top = cY + 320 + "px";
+            d.style.left = cX + 640 + "px";
+        }
+
+        function nextDiv(){
+            divNum++;
+        }
+       
         function sendPosition(cX, cY){
             var position = {
                 'x': Math.round(cX / 2),
