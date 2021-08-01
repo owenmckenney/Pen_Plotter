@@ -22,9 +22,6 @@ class Plotter:
         
         GPIO.setup(self.limit1_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(self.limit2_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        
-        #self.left_angle = -30
-        #self.right_angle = 210
 
         self.left_angle = 30
         self.right_angle = 150
@@ -68,6 +65,12 @@ class Plotter:
 
     def collect_pos(self, pos):
         self.path.append(pos)
+
+    def get_path(self):
+        return self.path
+
+    def reset_path(self):
+        self.path = [];
 
     def update_pos(self, x_pos, y_pos):
         x_pos = int(x_pos)
@@ -118,7 +121,7 @@ class Plotter:
 s1 = Stepper(2, 3, 23, 1600, (1,7,8), "Full")
 s2 = Stepper(16, 20, 24, 1600, (1,7,8), "Full")
 p = Plotter(s1, s2, 5, 6, 160)
-p.update_pos(0, 160)
+#p.update_pos(0, 160)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():    
@@ -127,17 +130,23 @@ def index():
 @app.route('/home', methods=['POST', 'GET'])
 def checkButtons():
     if request.method == 'POST':
-        if request.form.get('homebtn') == 'home':
+        if request.form.get('homebtn') == 'Home':
             print("Starting Homing...")
             #p.home()            
             print("Successfully Homed.")
-            return redirect(url_for('checkButtons'))
+            #return redirect(url_for('checkButtons'))
 
-        if request.form.get('runbtn') == 'run':
+        if request.form.get('drawbtn') == 'Draw':
             print("starting draw")
             p.draw()
             print("drawing done")
-            return redirect(url_for('checkButtons'))
+         
+        if request.form.get('resetbtn') == 'Reset':
+            print("reset")
+            p.reset_path()
+        
+        return redirect(url_for('checkButtons'))
+    
 
     elif request.method == 'GET':
         return render_template('index.html')
@@ -150,7 +159,6 @@ def getPosition():
         #p.update_pos(position['x'], position['y'])
         p.collect_pos(position)
         return position
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=80, debug=True)
