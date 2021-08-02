@@ -127,25 +127,27 @@ p = Plotter(s1, s2, 5, 6, 160)
 def index():    
     return render_template("index.html")
 
-@app.route('/home', methods=['POST', 'GET'])
+@app.route('/buttton', methods=['POST', 'GET'])
 def checkButtons():
     if request.method == 'POST':
         if request.form.get('homebtn') == 'Home':
             print("Starting Homing...")
             #p.home()            
             print("Successfully Homed.")
-            #return redirect(url_for('checkButtons'))
+            return redirect(url_for('checkButtons'))
 
         if request.form.get('drawbtn') == 'Draw':
             print("starting draw")
             p.draw()
             print("drawing done")
-         
+            return redirect(url_for('checkButtons'))
+
         if request.form.get('resetbtn') == 'Reset':
             print("reset")
             p.reset_path()
-        
-        return redirect(url_for('checkButtons'))
+            return redirect(url_for('checkButtons'))
+
+        #return redirect(url_for('checkButtons'))
     
 
     elif request.method == 'GET':

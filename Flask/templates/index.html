@@ -115,7 +115,6 @@
         <input class="rbtn" type="submit" value="Reset" name="resetbtn"/>
     </form>
 
-
     <!--<button class="rbtn" type="button" onclick="resetPath()" value="Reset" name="resetbtn">Reset</button>-->
     
     <p class="info">Current position: <span id="xpos"></span>, <span id="ypos"></span></p>
@@ -283,6 +282,29 @@
 
         }, 1000);
 
+        document.getElementsByClassName('rbtn').onclick = setTimeout(function resetPath(){
+            clearDivs();
+            sessionStorage.removeItem("rawPath");
+            sessionStorage.removeItem("path");
+            sessionStorage.removeItem("numDivs");
+            path = [];
+            rawPath = [];
+            divArray = [];
+            numDivs = 0;
+
+        }, 1000);
+
+        function clearDivs(){
+            for(let i = 0; i < parseInt(sessionStorage.getItem("numDivs")); i++){
+                try{
+                    var el = document.getElementsByTagName("div" + i)[0];
+                    el.remove();
+                    console.log("removed div" + i);
+                }catch(err){
+                    console.log("error on div" + i + ", continuing");
+                }
+            }
+        } 
 
         function penUpDown(state){
             if(state == 'down'){
@@ -302,36 +324,11 @@
             }
         }
 
-        document.getElementsByClassName('rbtn').onclick = setTimeout(function resetPath(){
-            clearDivs();
-
-            sessionStorage.removeItem("rawPath");
-            sessionStorage.removeItem("path");
-            sessionStorage.removeItem("numDivs");
-            path = [];
-            rawPath = [];
-            divArray = [];
-            numDivs = 0;
-
-        }, 1000);
-
         function collectPos(rcX, rcY, cX, cY){
             rawPath.push([rcX, rcY]);
             path.push([cX, cY]);
         }
 
-        function clearDivs(){
-            for(let i = 0; i < parseInt(sessionStorage.getItem("numDivs")); i++){
-                try{
-                    var el = document.getElementsByTagName("div" + i)[0];
-                    el.remove();
-                    console.log("removed div" + i);
-                }catch(err){
-                    console.log("error on div" + i + ", continuing");
-                }
-            }
-        }
-       
         function sendPosition(cX, cY){
             var position = {
                 'x': cX,
