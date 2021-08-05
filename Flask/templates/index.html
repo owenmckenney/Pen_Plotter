@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     <title>Pen Plotter Control Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
+        /*
         :root {
             --background-col: #353535;
             --ds-col: #BABABA; 
@@ -97,7 +99,7 @@
         .rbtn:hover {
             background-color: #B03A2D;
         }
-        
+        */
     </style>
 </head>
 
@@ -110,20 +112,13 @@
     </div>
         
     <form method="post" action="{{ url_for('checkButtons') }}">
-        <input class="dbtn" type="submit" value="Draw" name="drawbtn"/>
-        <input class="hbtn" type="submit" value="Home" name="homebtn"/>
-        <input class="rbtn" type="submit" value="Reset" name="resetbtn"/>
+        <input id="dbtn" class="dbtn" type="submit" value="Draw" name="drawbtn"/>
+        <input id="hbtn" class="hbtn" type="submit" value="Home" name="homebtn"/>
+        <input id="rbtn" class="rbtn" type="submit" value="Reset" name="resetbtn"/>
     </form>
-
-    <!--<button class="rbtn" type="button" onclick="resetPath()" value="Reset" name="resetbtn">Reset</button>-->
-    
+ 
     <p class="info">Current position: <span id="xpos"></span>, <span id="ypos"></span></p>
-    <p class="info">User drawing: <span id="udrawing"></span></p>
-    
-    <!--
-    <div class="info" style="bottom:20px">Current position: <span id="xpos"></span>, <span id="ypos"></span></div>
-    <div class="info" style="bottom:10px">User drawing: <span id="udrawing"></span></div>
-    -->
+    <p class="info">User drawing: <span id="udrawing"></span></p> 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js')}}">\x3C/script>')</script>
@@ -176,6 +171,7 @@
             }
         });
 
+      
         function dragStart(e){
             if(e.type === "touchstart"){
                 initialX = e.touches[0].clientX - xOffset;
@@ -231,8 +227,7 @@
                             penUpDown('up');
                             firstRun = true;
                         }
-                    }
-                    
+                    } 
                     initial = Date.now();
                 }
   
@@ -242,6 +237,39 @@
                 setTranslate(currentX, currentY, dragItem);
             }
         }
+
+        document.getElementById('dbtn').onclick = () => {
+            sessionStorage.setItem('reloading', 'true')
+            sessionStorage.setItem('regenDivs', 'true');
+        }
+        document.getElementById('rbtn').onclick = () => {
+            sessionStorage.setItem('reloading', 'true');
+            sessionStorage.setItem('resetPath', 'true');
+        }
+        
+        document.getElementById('hbtn').onclick = () => {
+            sessionStorage.setItem('reloading', 'true');
+            sessionStorage.setItem('regenDivs', 'true');
+        }
+        
+
+        $(document).ready(function() {
+            console.log("page loaded");
+            var reloading = sessionStorage.getItem("reloading");
+            console.log(sessionStorage.getItem("regenDivs"), sessionStorage.getItem("resetPath"));
+            if(reloading){
+                sessionStorage.removeItem("reloading");
+                if(sessionStorage.getItem("regenDivs") == 'true'){
+                    regenDivs();
+                    sessionStorage.removeItem("regenDivs");
+                }
+                if(sessionStorage.getItem("resetPath") == 'true'){
+                    resetPath();
+                    sessionStorage.removeItem("resetPath");
+                }
+            }
+
+        });
 
         document.body.onload = createDiv;
         let containerDiv = document.getElementById("item");
@@ -259,7 +287,7 @@
             divNum++;
         }
 
-        document.getElementsByClassName('dbtn').onlick = setTimeout(function regenDivs(){
+        function regenDivs(){
             console.log("starting regen");
             var storedPath = JSON.parse(sessionStorage.getItem("path"));
             var storedRawPath = JSON.parse(sessionStorage.getItem("rawPath"));
@@ -280,9 +308,9 @@
             path = storedPath;
             rawPath = storedRawPath;
 
-        }, 1000);
+        }
 
-        document.getElementsByClassName('rbtn').onclick = setTimeout(function resetPath(){
+        function resetPath(){
             clearDivs();
             sessionStorage.removeItem("rawPath");
             sessionStorage.removeItem("path");
@@ -291,8 +319,7 @@
             rawPath = [];
             divArray = [];
             numDivs = 0;
-
-        }, 1000);
+        }
 
         function clearDivs(){
             for(let i = 0; i < parseInt(sessionStorage.getItem("numDivs")); i++){

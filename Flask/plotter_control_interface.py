@@ -64,7 +64,8 @@ class Plotter:
         return "home"
 
     def collect_pos(self, pos):
-        self.path.append(pos)
+        if pos != self.path[len(self.path)]:
+            self.path.append(pos)
 
     def get_path(self):
         return self.path
@@ -147,7 +148,6 @@ def checkButtons():
             p.reset_path()
             return redirect(url_for('checkButtons'))
 
-        #return redirect(url_for('checkButtons'))
     
 
     elif request.method == 'GET':
