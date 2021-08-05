@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        user-scalable=no" />
+    <title>dragging test</title>
+    <style>
+        
+        canvas {
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid white;
+            background-color: #ECECEC;
+            width: 1280px;
+            height: 640px;  
+            border-radius: 640px 640px 4px 4px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            touch-action: none;
+        }
+
+        body {
+            background: #333;
+        }
+
+    </style>
+</head>
+
+<body>
+   
+    <canvas></canvas>
+
+    <p>x: <span id="xpos"></span></p>
+    <p>y: <span id="ypos"></span></p>
+
+    <form method="post" action="{{ url_for('checkButtons') }}">
+        <input type="submit" value="home" name="homebtn"/>
+        <input type="submit" value="run" name="runbtn"/>
+    </form>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js')}}">\x3C/script>')</script>
+    {{ JSGlue.include() }}
+    
+    <script>
+
+    </script>
+</body>
+
+</html>

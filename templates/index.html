@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <title>Pen Plotter Control Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+
+<body>
+    
+    <div id="outerContainer">
+        <div id="container">
+            <div id="item"></div>
+        </div>
+    </div>
+        
+    <form method="post" action="{{ url_for('checkButtons') }}">
+        <input id="dbtn" class="dbtn" type="submit" value="Draw" name="drawbtn"/>
+        <input id="hbtn" class="hbtn" type="submit" value="Home" name="homebtn"/>
+        <input id="rbtn" class="rbtn" type="submit" value="Reset" name="resetbtn"/>
+    </form>
+ 
+    <p class="info">Current position: <span id="xpos"></span>, <span id="ypos"></span></p>
+    <p class="info">User drawing: <span id="udrawing"></span></p> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js')}}">\x3C/script>')</script>
+    {{ JSGlue.include() }}
+
+    <script src="{{url_for('static', filename='main.js')}}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+:root {
+    --background-col: #353535;
+    --ds-col: #BABABA; 
+}
+
+#container {  
+    position: absolute;
+    background-color: var(--ds-col);
+    align-items: center;
+    justify-content: center;
+    width: 1280px;
+    height: 640px;
+    border-radius: 640px 640px 4px 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    touch-action: none;    
+}
+
+#item {
+    width: 20px;
+    height: 20px;
+    background-color: rgb(0,0,255);  
+    border: 5px solid rgba(100, 100, 200, .5);
+    border-radius: 50%;
+    touch-action: none;
+    user-select: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;  
+}
+
+#item:active {
+    background-color: rgba(168, 218, 220, 1.00);
+}
+
+#item:hover {
+    cursor: pointer;
+    border-width: 5px;
+}
+
+body {
+    background: var(--background-col);
+}
+
+.info {
+    color: var(--ds-col);
+    font-size: 10px;
+    left: 0;  
+}
+
+.paint {
+    width: 15px;
+    height: 15px;
+    background-color: rgb(255,0,0);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.hbtn, .dbtn, .rbtn {
+    height: 60px;
+    width: 130px;
+    display: block;
+    border-radius: 4px;
+    font-size: 30px;
+    border: 2px solid #1E1E1E;
+    transition-time: 0.2s;
+}
+
+.dbtn {
+    background-color: #62AD54;
+}
+
+.dbtn:hover {
+    background-color: #457A3B;
+}
+
+.hbtn {
+    background-color: #3D8cB9;
+}
+
+.hbtn:hover {
+    background-color: #2C6585;
+}
+
+.rbtn {
+    background-color: #E34B3B;
+}
+
+.rbtn:hover {
+    background-color: #B03A2D;
+}
+
