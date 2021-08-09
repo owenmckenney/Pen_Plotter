@@ -9,21 +9,21 @@ var initialY;
 var xOffset = 0;
 var yOffset = 0;
 
-var yLimit = 0;
-var xLimit = 0;
-
 var initial = Date.now()
 var current = 0;
 
 var divArray = [];
 var divNum = 0;
 
-let spacebarPressed = false;
+var spaceDown = false;
 
 let rawPath = [];
 let path = [];
 
 var firstRun = true;
+
+var yLimit = 0;
+var xLimit = 0;
 
 container.addEventListener("touchstart", dragStart, false);
 container.addEventListener("touchend", dragEnd, false);
@@ -34,14 +34,16 @@ container.addEventListener("mouseup", dragEnd, false);
 container.addEventListener("mousemove", drag, false);
 
 document.addEventListener("keydown", event => {
-        if(event.code === 'Space'){
-            spacebarPressed = true;
+        if(event.code === 'Space' && spaceDown == false){
+            spaceDown = true;
+            sendPosition('pen_down', 'pen_down');
         }
 });
 
 document.addEventListener("keyup", event => {
-    if(event.code === 'Space'){
-        spacebarPressed = false;
+    if(event.code === 'Space' && spaceDown == true){
+        spaceDown = false;
+        sendPosition('pen_up', 'pen_up');
     }
 });
 
@@ -68,6 +70,7 @@ function drag(e){
     if(active){
         current = Date.now();
         e.preventDefault();
+        
 
         if(e.type === "touchmove"){
             currentX = e.touches[0].clientX - initialX;
@@ -85,28 +88,19 @@ function drag(e){
         var y = pos[1];
 
         if((current - initial) > 5){
-            if(spacebarPressed){
-                if(firstRun == true){
-                    penUpDown('down');
-                    firstRun = false;
-                }
+            if(spaceDown == true){
                 path.push([0, 0]);
                 sendPosition(x, y);
                 createDiv(currentX, currentY);
-                collectPos(currentX, currentY, x, y)
-                    storeData();
-            }else{
-                if(firstRun == false){
-                    penUpDown('up');
-                    firstRun = true;
-                }
-            } 
+                collectPos(currentX, currentY, x, y);
+                storeData();
+            }
             initial = Date.now();
         }
 
         document.getElementById("xpos").innerHTML = x; 
         document.getElementById("ypos").innerHTML = y; 
-        document.getElementById("udrawing").innerHTML = spacebarPressed;
+        document.getElementById("udrawing").innerHTML = spaceDown;
         setTranslate(currentX, currentY, dragItem);
     }
 }
