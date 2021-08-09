@@ -96,56 +96,6 @@ class Stepper:
 
         self.Accel(accel_point, accel_delay, direction, int(self.spr / 32))
 
-class Equal_Step:
-    
-    def __init__(self, s1, s2):
-        self.s1 = s1
-        self.s2 = s2
-        self.delay = 1 / 2000 
-
-    def equal_step(self, steps1, steps2, limit):
-        if steps1 < 0:
-            self.s1.set_direction(0)
-            steps1 *= -1
-        else:
-            self.s1.set_direction(1)
-
-        if steps2 < 0:
-            self.s2.set_direction(1)
-            steps2 *= -1
-        else:
-            self.s2.set_direction(0)
-
-        ma = max(steps1, steps2)
-        mi = min(steps1, steps2)
-        s_ma = 0
-        s_mi = 0
- 
-        if ma == steps1:
-            s_ma = self.s1
-            s_mi = self.s2
-        else:
-            s_ma = self.s2
-            s_mi = self.s1
-
-        if mi == 0:
-            for x in range(ma):
-                s_ma.step(self.delay)
-            return 'done'
-
-        ratio = int(ma / mi)
-        leftover = ma % mi
-
-        for x in range(ma - leftover):
-            s_ma.step(self.delay)
-            if x % ratio == 0:
-                s_mi.step(self.delay)
-
-        for x in range(leftover):
-            s_ma.step(self.delay)
-
-        return 'done', mi, ma
-            
 
 if __name__ == "__main__":
     # dir, step, sleep, spr, (mode pins), mode 
@@ -153,13 +103,6 @@ if __name__ == "__main__":
     stepper1 = Stepper(2, 3, 23, 1600, (1,7,8), "Full")
     stepper2 = Stepper(16, 20, 24, 1600, (1,7,8), "Full")
     #stepper1.Rotate(1, 1)
-    #stepper1.equal_step(473, 39)
-
-    equal = Equal_Step(stepper1, stepper2)
-    equal.equal_step(-100, 100)
-
-    #es(stepper1, 200, stepper2, 10)
-
     #stepper2.Rotate(1, 1)
     #stepper1.Rotate_Ramp_Up_Down(1, 1)
     #stepper1.Oscilate(4)
