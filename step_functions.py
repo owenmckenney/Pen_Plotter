@@ -103,7 +103,7 @@ class Equal_Step:
         self.s2 = s2
         self.delay = 1 / 2000 
 
-    def equal_step(self, steps1, steps2):
+    def equal_step(self, steps1, steps2, limit):
         if steps1 < 0:
             self.s1.set_direction(0)
             steps1 *= -1

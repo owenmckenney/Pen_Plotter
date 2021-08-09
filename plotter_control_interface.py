@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_jsglue import JSGlue
 from plotter import Plotter
+from step_functions import Stepper
 
 app = Flask(__name__)
 jsglue = JSGlue(app)
@@ -32,8 +33,6 @@ def checkButtons():
             print("reset")
             p.reset_path()
             return redirect(url_for('checkButtons'))
-
-    
 
     elif request.method == 'GET':
         return render_template('index.html')
