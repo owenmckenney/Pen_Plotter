@@ -136,6 +136,7 @@ $(document).ready(function() {
             sessionStorage.removeItem("resetPath");
         }
     }
+
 });
 
 document.body.onload = createDiv;
@@ -147,12 +148,20 @@ function createDiv(cX, cY){
     divArray[divNum].className = 'paint';
     parentDiv.insertBefore(divArray[divNum], containerDiv);
 
-    const d = document.getElementsByTagName("div" + divNum)[0];
-    d.style.top = cY + 320 + "px";
-    d.style.left = cX + 640 + "px";
-
+    if(divNum == 0){
+        removeBadDiv();
+    }else{
+        const d = document.getElementsByTagName("div" + divNum)[0];
+        d.style.top = cY + 320 + "px";
+        d.style.left = cX + 640 + "px";
+    }
     divNum++;
 }
+
+function removeBadDiv(){
+    var el = document.getElementsByTagName("div0")[0];
+    el.remove();
+}   
 
 function regenDivs(){
     console.log("starting regen");
